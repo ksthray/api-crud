@@ -1,0 +1,38 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  font-family: calibri;
+}
+.container {
+  width: 90%;
+  margin: 0 auto;
+  background: rgb(241, 241, 241);
+}
+.header {
+  width: 500px;
+  margin: 0 auto;
+  padding: 20px;
+  height: 100px;
+  text-align: center;
+}
+.header h1 {
+  font-size: 3rem;
+  font-weight: bold;
+}
+.formulaire {
+  width: 60%;
+  margin: 0 auto;
+  padding: 10px;
+}
+input {
+  margin-bottom: 10px;
+}
+
+@media (max-width: 500px) {
+  .table-employes {
+    overflow: scroll;
+  }
+}
