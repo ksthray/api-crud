@@ -27,12 +27,23 @@ body {
   margin: 0 auto;
   padding: 10px;
 }
+#miseajour {
+  display: none;
+}
 input {
   margin-bottom: 10px;
+}
+.update-btn {
+  display: none;
 }
 
 @media (max-width: 500px) {
   .table-employes {
     overflow: scroll;
   }
+}
+
+.error {
+  border: 2px solid rgb(255, 81, 81);
+  background: rgba(255, 29, 29, 0.1);
 }

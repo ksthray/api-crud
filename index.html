@@ -20,65 +20,114 @@
           <form id="form">
             <div class="row">
               <div class="col">
-                <input type="text" id="mat" class="form-control mat" placeholder="Matricule" />
-               </div>
-            </div>
-            <div class="row">
-              <div class="col">
-                <input type="text" id="nom" class="form-control nom" placeholder="Nom"/>
-              </div>
-              <div class="col">
-                <input type="text" id="prenom" class="form-control prenom" placeholder="Prénom"/>
+                <input
+                  type="number"
+                  id="mat"
+                  class="form-control mat"
+                  placeholder="Matricule"
+                />
               </div>
             </div>
             <div class="row">
-                <div class="col">
-                    <input type="text" id="email" class="form-control email" placeholder="Email" />
-                </div>
+              <div class="col">
+                <input
+                  type="text"
+                  id="nom"
+                  class="form-control nom"
+                  placeholder="Nom"
+                />
+              </div>
+              <div class="col">
+                <input
+                  type="text"
+                  id="prenom"
+                  class="form-control prenom"
+                  placeholder="Prénom"
+                />
+              </div>
             </div>
             <div class="row">
-                <div class="col">
-                    <input type="text" id="age" class="form-control age" placeholder="Age" />
-                </div>
-                <div class="col">
-                    <input type="text" id="poste" class="form-control poste" placeholder="Poste" />
-                </div>
+              <div class="col">
+                <input
+                  type="text"
+                  id="email"
+                  class="form-control email"
+                  placeholder="Email"
+                />
+              </div>
             </div>
             <div class="row">
-                <div class="col">
-                    <input type="text" id="tel" class="form-control tel" placeholder="Numéro de téléphone" />
-                </div>
+              <div class="col">
+                <input
+                  type="text"
+                  id="age"
+                  class="form-control age"
+                  placeholder="Age"
+                />
+              </div>
+              <div class="col">
+                <input
+                  type="text"
+                  id="poste"
+                  class="form-control poste"
+                  placeholder="Poste"
+                />
+              </div>
             </div>
             <div class="row">
-                <div class="col">
-                    <input type="text" id="statut" class="form-control statut" placeholder="Status marital" />
-                </div>
-                <div class="col">
-                    <input type="text" id="pays" class="form-control pays" placeholder="Pays" />
-                </div>
+              <div class="col">
+                <input
+                  type="text"
+                  id="tel"
+                  class="form-control tel"
+                  placeholder="Numéro de téléphone"
+                />
+              </div>
             </div>
-            <button type="submit" class="btn btn-primary btn-block">Enregistrer</button>
+            <div class="row">
+              <div class="col">
+                <input
+                  type="text"
+                  id="statut"
+                  class="form-control statut"
+                  placeholder="Status marital"
+                />
+              </div>
+              <div class="col">
+                <input
+                  type="text"
+                  id="pays"
+                  class="form-control pays"
+                  placeholder="Pays"
+                />
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary add-btn btn-block">
+              Enregistrer
+            </button>
+            <button type="submit" class="btn btn-primary update-btn btn-block">
+              Modifier
+            </button>
           </form>
         </div>
         <div class="table-employes">
-            <table class="table">
-                <thead class="thead-dark">
-                    <tr>
-                        <th scope="col">Mat</th>
-                        <th scope="col">Nom</th>
-                        <th scope="col">Prénom</th>
-                        <th scope="col">Email</th>
-                        <th scope="col">Age</th>
-                        <th scope="col">Poste</th>
-                        <th scope="col">Tél</th>
-                        <th scope="col">Statut</th>
-                        <th scope="col">Pays</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    
-                </tbody>
-            </table>
+          <table class="table">
+            <thead class="thead-dark">
+              <tr>
+                <th scope="col">Mat</th>
+                <th scope="col">Nom</th>
+                <th scope="col">Prénom</th>
+                <th scope="col">Email</th>
+                <th scope="col">Age</th>
+                <th scope="col">Poste</th>
+                <th scope="col">Tél</th>
+                <th scope="col">Statut</th>
+                <th scope="col">Pays</th>
+                <th scope="col">Mise à jour</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
         </div>
       </div>
     </div>
