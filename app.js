@@ -19,9 +19,17 @@ axios
   .then((res) => initialiseCountries(res.data))
   .catch((error) => console.log(error));
 
-function getSeletectValue() {
+function getSeletectValueCountries() {
   let result = pays.value;
 }
+
+let situation;
+
+function getSeletectValueStatut() {
+  situation = estMarie.value;
+  console.log(situation);
+}
+
 function initialiseCountries(countriesData) {
   const countries = countriesData;
   let option = "";
@@ -48,10 +56,10 @@ function insertEmploye() {
                 ? ""
                 : employe.numeroTelephone
             }</td>
-            <td>${employe.estMarie ? "Marié" : "Celibatair"}</td>
+            <td>${employe.estMarie ? "Marié" : "celibataire"}</td>
             <td>${employe.pays}</td>
             <td>
-              <button class="btn btn-primary" id="edit-${
+              <button class="btn btn-primary bouton" id="edit-${
                 employe._id
               }">modifier</button> 
               <button class="btn btn-primary" id="deleted-${
@@ -108,6 +116,14 @@ function addEmployesAndValidate() {
     email.classList.remove("error");
     poste.classList.remove("error");
 
+    if (estMarie.value === "Marié") {
+      situation = true;
+      console.log(situation);
+    } else if (estMarie.value === "Celibataire") {
+      situation = false;
+      console.log(situation);
+    }
+
     axios
       .post("http://167.71.45.243:4000/api/employes?api_key=ozvcwxy", {
         nom: nom.value,
@@ -115,7 +131,7 @@ function addEmployesAndValidate() {
         email: email.value,
         poste: poste.value,
         numeroTelephone: tel.value,
-        estMarie: estMarie.value,
+        estMarie: situation,
         pays: pays.value,
       })
       .then((response) => {
@@ -189,7 +205,6 @@ function deleteEmploye(employe) {
       `http://167.71.45.243:4000/api/employes/${employe._id}?api_key=ozvcwxy`
     )
     .then((response) => {
-      console.log(response);
       alert("L'employé supprimé avec succèss");
       reloadPage();
     })
@@ -206,7 +221,6 @@ function updateEmploye(id, employe) {
       employe
     )
     .then((response) => {
-      console.log(response);
       alert("L'employé modifié avec succèss");
       reloadPage();
     })
@@ -214,7 +228,4 @@ function updateEmploye(id, employe) {
       console.log("Une erreure est survenue");
       console.log(error.response);
     });
-
-  // addBtn.style.display = "block";
-  // updateBtn.style.display = "none";
 }
