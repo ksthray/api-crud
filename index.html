@@ -20,16 +20,7 @@
           <form id="form">
             <div class="row">
               <div class="col">
-                <input
-                  type="number"
-                  id="mat"
-                  class="form-control mat"
-                  placeholder="Matricule"
-                />
-              </div>
-            </div>
-            <div class="row">
-              <div class="col">
+                <label for="nom">Nom</label>
                 <input
                   type="text"
                   id="nom"
@@ -38,6 +29,7 @@
                 />
               </div>
               <div class="col">
+                <label for="prenom">Prénom</label>
                 <input
                   type="text"
                   id="prenom"
@@ -48,8 +40,9 @@
             </div>
             <div class="row">
               <div class="col">
+                <label for="email">Email</label>
                 <input
-                  type="text"
+                  type="email"
                   id="email"
                   class="form-control email"
                   placeholder="Email"
@@ -58,14 +51,7 @@
             </div>
             <div class="row">
               <div class="col">
-                <input
-                  type="text"
-                  id="age"
-                  class="form-control age"
-                  placeholder="Age"
-                />
-              </div>
-              <div class="col">
+                <label for="poste">Poste</label>
                 <input
                   type="text"
                   id="poste"
@@ -73,12 +59,11 @@
                   placeholder="Poste"
                 />
               </div>
-            </div>
-            <div class="row">
               <div class="col">
+                <label for="tel">Numéro de téléphone</label>
                 <input
                   type="text"
-                  id="tel"
+                  id="numeroTelephone"
                   class="form-control tel"
                   placeholder="Numéro de téléphone"
                 />
@@ -86,26 +71,31 @@
             </div>
             <div class="row">
               <div class="col">
+                <label for="statut">Statut marital</label>
                 <input
                   type="text"
-                  id="statut"
+                  id="estMarie"
                   class="form-control statut"
                   placeholder="Status marital"
                 />
               </div>
+            </div>
+            <div class="row">
               <div class="col">
-                <input
-                  type="text"
+                <label for="pays">Votre pays</label>
+                <select
+                  class="form-control"
+                  name="pays"
                   id="pays"
-                  class="form-control pays"
-                  placeholder="Pays"
-                />
+                  onchange="getSeletectValue()"
+                ></select>
               </div>
             </div>
+            <br />
             <button type="submit" class="btn btn-primary add-btn btn-block">
               Enregistrer
             </button>
-            <button type="submit" class="btn btn-primary update-btn btn-block">
+            <button type="button" class="btn btn-primary update-btn btn-block">
               Modifier
             </button>
           </form>
@@ -114,11 +104,9 @@
           <table class="table">
             <thead class="thead-dark">
               <tr>
-                <th scope="col">Mat</th>
                 <th scope="col">Nom</th>
                 <th scope="col">Prénom</th>
                 <th scope="col">Email</th>
-                <th scope="col">Age</th>
                 <th scope="col">Poste</th>
                 <th scope="col">Tél</th>
                 <th scope="col">Statut</th>
@@ -131,7 +119,7 @@
         </div>
       </div>
     </div>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
     <script src="app.js"></script>
   </body>
 </html>

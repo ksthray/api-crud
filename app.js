@@ -2,17 +2,68 @@ const submit = document.getElementById("form");
 const table = document.querySelector("tbody");
 const updateBtn = document.querySelector(".update-btn");
 const addBtn = document.querySelector(".add-btn");
-const employes = [];
 
-let mat = document.getElementById("mat");
 let nom = document.getElementById("nom");
 let prenom = document.getElementById("prenom");
-let email = document.getElementById("email");
-let age = document.getElementById("age");
-let poste = document.getElementById("poste");
-let tel = document.getElementById("tel");
-let statut = document.getElementById("statut");
+let estMarie = document.getElementById("estMarie");
 let pays = document.getElementById("pays");
+let email = document.getElementById("email");
+let poste = document.getElementById("poste");
+let tel = document.getElementById("numeroTelephone");
+
+function reloadPage() {
+  history.go(0);
+}
+axios
+  .get("https://restcountries.eu/rest/v2/all")
+  .then((res) => initialiseCountries(res.data))
+  .catch((error) => console.log(error));
+
+function getSeletectValue() {
+  let result = pays.value;
+}
+function initialiseCountries(countriesData) {
+  const countries = countriesData;
+  let option = "";
+  for (countrie of countries) {
+    option += `<option>${countrie.name}</option>`;
+  }
+  pays.innerHTML = option;
+}
+
+function insertEmploye() {
+  axios
+    .get("http://167.71.45.243:4000/api/employes?api_key=ozvcwxy")
+    .then((response) => {
+      for (employe of response.data) {
+        const tr = document.createElement("tr");
+        tr.setAttribute("id", `tr-${employe._id}`);
+        tr.innerHTML += `
+            <td>${employe.nom}</td>
+            <td>${employe.prenom}</td>
+            <td>${employe.email}</td>
+            <td>${employe.poste}</td>
+            <td>${
+              employe.numeroTelephone == undefined
+                ? ""
+                : employe.numeroTelephone
+            }</td>
+            <td>${employe.estMarie ? "Marié" : "Celibatair"}</td>
+            <td>${employe.pays}</td>
+            <td>
+              <button class="btn btn-primary" id="edit-${
+                employe._id
+              }">modifier</button> 
+              <button class="btn btn-primary" id="deleted-${
+                employe._id
+              }">supprimer</button>
+            </td>`;
+        table.append(tr);
+        deletedAndUpdate(employe);
+      }
+    });
+}
+insertEmploye();
 
 submit.addEventListener("submit", (e) => {
   e.preventDefault();
@@ -20,170 +71,150 @@ submit.addEventListener("submit", (e) => {
 });
 
 function addEmployesAndValidate() {
-  const inputs = document.querySelectorAll("input");
-  if (!mat.value) {
-    inputs[0].classList.add("error");
-  }
+  const regexEmail = /^(([\-\w]+)\.?)+@(([\-\w]+)\.?)+\.[a-zA-Z]{2,4}$/;
   if (!nom.value) {
-    inputs[1].classList.add("error");
+    nom.classList.add("error");
   }
   if (!prenom.value) {
-    inputs[2].classList.add("error");
+    prenom.classList.add("error");
   }
-  if (!email.value) {
-    inputs[3].classList.add("error");
+  if (!estMarie.value) {
+    estMarie.classList.add("error");
   }
-  if (!age.value) {
-    inputs[4].classList.add("error");
+  if (!regexEmail.test(email.value)) {
+    email.classList.add("error");
   }
   if (!poste.value) {
-    inputs[5].classList.add("error");
+    poste.classList.add("error");
   }
   if (!tel.value) {
-    inputs[6].classList.add("error");
-  }
-  if (!statut.value) {
-    inputs[7].classList.add("error");
+    tel.classList.add("error");
   }
   if (!pays.value) {
-    inputs[8].classList.add("error");
+    pays.classList.add("error");
   }
 
   if (
-    mat.value.length &&
     nom.value.length &&
     prenom.value.length &&
+    estMarie.value.length &&
     email.value.length &&
-    age.value.length &&
     poste.value.length &&
-    tel.value.length &&
-    statut.value.length &&
-    pays.value.length
+    tel.value.length
   ) {
-    inputs[0].classList.remove("error");
-    inputs[1].classList.remove("error");
-    inputs[2].classList.remove("error");
-    inputs[3].classList.remove("error");
-    inputs[4].classList.remove("error");
-    inputs[5].classList.remove("error");
-    inputs[6].classList.remove("error");
-    inputs[7].classList.remove("error");
-    inputs[8].classList.remove("error");
+    nom.classList.remove("error");
+    prenom.classList.remove("error");
+    estMarie.classList.remove("error");
+    email.classList.remove("error");
+    poste.classList.remove("error");
 
-    const obj = {
-      mat: mat.value,
-      nom: nom.value,
-      prenom: prenom.value,
-      email: email.value,
-      age: age.value,
-      poste: poste.value,
-      tel: tel.value,
-      statut: statut.value,
-      pays: pays.value,
-    };
-    employes.push(obj);
-
-    mat.value = "";
-    prenom.value = "";
-    nom.value = "";
-    email.value = "";
-    age.value = "";
-    poste.value = "";
-    tel.value = "";
-    statut.value = "";
-    pays.value = "";
-
-    table.innerHTML = "";
-    insertEmploye();
+    axios
+      .post("http://167.71.45.243:4000/api/employes?api_key=ozvcwxy", {
+        nom: nom.value,
+        prenom: prenom.value,
+        email: email.value,
+        poste: poste.value,
+        numeroTelephone: tel.value,
+        estMarie: estMarie.value,
+        pays: pays.value,
+      })
+      .then((response) => {
+        console.log(response);
+        alert("L'employé ajouté avec succèss");
+        reloadPage();
+      })
+      .catch((error) => {
+        alert("Une erreure est survenue");
+        console.log(error.response);
+      });
   }
 }
+function deletedAndUpdate(employe) {
+  const btnEdit = document.getElementById(`edit-${employe._id}`);
+  const btnDelete = document.getElementById(`deleted-${employe._id}`);
 
-function insertEmploye() {
-  for (let employe of employes) {
-    const tr = document.createElement("tr");
-    tr.setAttribute("id", `${employe.mat}`);
-    tr.innerHTML += `
-            <td>${employe.mat}</td>
-            <td>${employe.nom}</td>
-            <td>${employe.prenom}</td>
-            <td>${employe.email}</td>
-            <td>${employe.age}</td>
-            <td>${employe.poste}</td>
-            <td>${employe.tel}</td>
-            <td>${employe.statut}</td>
-            <td>${employe.pays}</td>
-            <td>
-              <button class="btn btn-primary" onClick="updateEmploye(${employe.mat})">modifier</button> 
-              <button class="btn btn-primary" onClick="deleteEmploye(${employe.mat})">supprimer</button>
-            </td>`;
-    table.append(tr);
-  }
-}
-
-function deleteEmploye(_mat) {
-  employes.map((employe) => {
-    const message = confirm("Voulez vous vraiment supprimer?");
-    if (message) {
-      if (employe.mat == _mat) {
-        let index = employes.findIndex((employe) => employe.mat === _mat);
-        const removeTr = document.getElementById(_mat);
-        removeTr.parentNode.removeChild(removeTr);
-        employes.splice(index, 1);
-      }
-    } else {
-      return;
+  btnDelete.addEventListener("click", () => {
+    if (
+      confirm(
+        `Êtes-vous sûr de supprimer l'employé ${employe.prenom} ${employe.nom} ?`
+      )
+    ) {
+      deleteEmploye(employe);
     }
   });
-}
+  btnEdit.addEventListener("click", (e) => {
+    e.stopPropagation();
+    nom.value = employe.nom;
+    prenom.value = employe.prenom;
+    email.value = employe.email;
+    poste.value = employe.poste;
+    tel.value = employe.numeroTelephone;
+    estMarie.value = employe.estMarie;
+    pays.value = employe.pays;
 
-function updateEmploye(_mat) {
-  employes.map((employe) => {
-    if (employe.mat == _mat) {
-      mat.value = employe.mat;
-      nom.value = employe.nom;
-      prenom.value = employe.prenom;
-      email.value = employe.email;
-      age.value = employe.age;
-      poste.value = employe.poste;
-      tel.value = employe.tel;
-      statut.value = employe.statut;
-      pays.value = employe.pays;
-    }
     addBtn.style.display = "none";
     updateBtn.style.display = "block";
+    if (btnEdit) {
+      updateBtn.addEventListener("click", () => {
+        console.log(employe);
+        const changeEmploye = {
+          nom: nom.value,
+          prenom: prenom.value,
+          email: email.value,
+          poste: poste.value,
+          //tel: tel.value,
+          estMarie: estMarie.value,
+          pays: pays.value,
+        };
+        updateEmploye(employe._id, changeEmploye);
+
+        updateBtn.style.display = "none";
+        addBtn.style.display = "block";
+
+        nom.value = "";
+        prenom.value = "";
+        email.value = "";
+        poste.value = "";
+        tel.value = "";
+        estMarie.value = "";
+        pays.value = "";
+      });
+    }
   });
 }
 
-updateBtn.addEventListener("click", (e) => {
-  e.preventDefault();
-  e.stopPropagation();
-  let index = employes.findIndex((employe) => employe.mat === mat.value);
-  employes.splice(index, 1, {
-    mat: mat.value,
-    nom: nom.value,
-    prenom: prenom.value,
-    email: email.value,
-    age: age.value,
-    poste: poste.value,
-    tel: tel.value,
-    statut: statut.value,
-    pays: pays.value,
-  });
+function deleteEmploye(employe) {
+  axios
+    .delete(
+      `http://167.71.45.243:4000/api/employes/${employe._id}?api_key=ozvcwxy`
+    )
+    .then((response) => {
+      console.log(response);
+      alert("L'employé supprimé avec succèss");
+      reloadPage();
+    })
+    .catch(function (error) {
+      alert("Une erreure est survenue");
+      console.log(error.response);
+    });
+}
 
-  table.innerText = "";
+function updateEmploye(id, employe) {
+  axios
+    .put(
+      `http://167.71.45.243:4000/api/employes/${id}?api_key=ozvcwxy`,
+      employe
+    )
+    .then((response) => {
+      console.log(response);
+      alert("L'employé modifié avec succèss");
+      reloadPage();
+    })
+    .catch(function (error) {
+      console.log("Une erreure est survenue");
+      console.log(error.response);
+    });
 
-  insertEmploye();
-
-  addBtn.style.display = "block";
-  updateBtn.style.display = "none";
-
-  mat.value = "";
-  nom.value = "";
-  prenom.value = "";
-  email.value = "";
-  age.value = "";
-  poste.value = "";
-  tel.value = "";
-  statut.value = "";
-  pays.value = "";
-});
+  // addBtn.style.display = "block";
+  // updateBtn.style.display = "none";
+}
