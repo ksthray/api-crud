@@ -2,6 +2,7 @@ const submit = document.getElementById("form");
 const table = document.querySelector("tbody");
 const updateBtn = document.querySelector(".update-btn");
 const addBtn = document.querySelector(".add-btn");
+const search = document.getElementById("search");
 
 let nom = document.getElementById("nom");
 let prenom = document.getElementById("prenom");
@@ -26,8 +27,13 @@ function getSeletectValueCountries() {
 let situation;
 
 function getSeletectValueStatut() {
-  situation = estMarie.value;
-  console.log(situation);
+  if (estMarie.value === "Marié") {
+    situation = true;
+    console.log(situation);
+  } else {
+    situation = false;
+    console.log(situation);
+  }
 }
 
 function initialiseCountries(countriesData) {
@@ -39,39 +45,63 @@ function initialiseCountries(countriesData) {
   pays.innerHTML = option;
 }
 
-function insertEmploye() {
-  axios
-    .get("http://167.71.45.243:4000/api/employes?api_key=ozvcwxy")
-    .then((response) => {
-      for (employe of response.data) {
-        const tr = document.createElement("tr");
-        tr.setAttribute("id", `tr-${employe._id}`);
-        tr.innerHTML += `
-            <td>${employe.nom}</td>
-            <td>${employe.prenom}</td>
-            <td>${employe.email}</td>
-            <td>${employe.poste}</td>
-            <td>${
-              employe.numeroTelephone == undefined
-                ? ""
-                : employe.numeroTelephone
-            }</td>
-            <td>${employe.estMarie ? "Marié" : "celibataire"}</td>
-            <td>${employe.pays}</td>
-            <td>
-              <button class="btn btn-primary bouton" id="edit-${
-                employe._id
-              }">modifier</button> 
-              <button class="btn btn-primary" id="deleted-${
-                employe._id
-              }">supprimer</button>
-            </td>`;
-        table.append(tr);
-        deletedAndUpdate(employe);
-      }
-    });
+let searchEmploye = [];
+
+search.addEventListener("keyup", (e) => {
+  const stockTab = searchEmploye[0].data;
+  const searchString = e.target.value.toLowerCase();
+  const filterCaracteres = stockTab.filter((caractere) => {
+    return (
+      caractere.nom.toLowerCase().includes(searchString) ||
+      caractere.prenom.toLowerCase().includes(searchString)
+    );
+  });
+  insertEmploye(filterCaracteres);
+});
+
+const getEmploye = async () => {
+  try {
+    let response = await Promise.all([
+      axios.get("http://167.71.45.243:4000/api/employes?api_key=ozvcwxy"),
+    ]);
+    searchEmploye = response;
+    insertEmploye(response[0].data);
+  } catch (err) {
+    console.log(err);
+  }
+};
+getEmploye();
+
+function insertEmploye(employes) {
+  const travailleur = employes
+    .map((employe) => {
+      return `
+      <tr>
+      <td>${employe.nom}</td>
+      <td>${employe.prenom}</td>
+      <td>${employe.email}</td>
+      <td>${employe.poste}</td>
+      <td>${employe.numeroTelephone == undefined ? "" : employe.numeroTelephone}
+      </td>
+      <td>${employe.estMarie ? "Marié" : "celibataire"}</td>
+      <td>${employe.pays}</td>
+      <td>
+        <button class="btn btn-primary bouton" id="edit-${
+          employe._id
+        }">modifier</button>
+        <button class="btn btn-primary" id="deleted-${
+          employe._id
+        }">supprimer</button>
+      </td>
+      </tr>
+    `;
+    })
+    .join("");
+  table.innerHTML = travailleur;
+  for (emp of employes) {
+    deletedAndUpdate(emp);
+  }
 }
-insertEmploye();
 
 submit.addEventListener("submit", (e) => {
   e.preventDefault();
@@ -116,13 +146,7 @@ function addEmployesAndValidate() {
     email.classList.remove("error");
     poste.classList.remove("error");
 
-    if (estMarie.value === "Marié") {
-      situation = true;
-      console.log(situation);
-    } else if (estMarie.value === "Celibataire") {
-      situation = false;
-      console.log(situation);
-    }
+    getSeletectValueStatut();
 
     axios
       .post("http://167.71.45.243:4000/api/employes?api_key=ozvcwxy", {
@@ -160,14 +184,16 @@ function deletedAndUpdate(employe) {
   });
   btnEdit.addEventListener("click", (e) => {
     e.stopPropagation();
+    getSeletectValueStatut();
     nom.value = employe.nom;
     prenom.value = employe.prenom;
     email.value = employe.email;
     poste.value = employe.poste;
     tel.value = employe.numeroTelephone;
-    estMarie.value = employe.estMarie;
+    estMarie.value == undefined ? situation : situation;
     pays.value = employe.pays;
 
+    console.log(situation);
     addBtn.style.display = "none";
     updateBtn.style.display = "block";
     if (btnEdit) {
@@ -179,9 +205,10 @@ function deletedAndUpdate(employe) {
           email: email.value,
           poste: poste.value,
           //tel: tel.value,
-          estMarie: estMarie.value,
+          estMarie: estMarie.value === "Marié" ? true : false,
           pays: pays.value,
         };
+        console.log(changeEmploye.estMarie);
         updateEmploye(employe._id, changeEmploye);
 
         updateBtn.style.display = "none";
